@@ -170,44 +170,6 @@ int main() {
 > }
 > ```
 >
-> 3. **Copy Constructor**
->
->    - Creates a new object as a copy of an existing one.
->    - Default version does a shallow copy; you can define it for deep copying.
->
->    **Output**: Copied Box: Small.
->
->    **Why**: Without this, b2.name would point to b1.name, causing a double-delete crash.
->
->    ```cpp
->    #include <iostream>
->    #include <cstring>
->       
->    class Box {
->    public:
->        char* name;
->        Box(const char* n) {
->            name = new char[strlen(n) + 1];
->            strcpy(name, n);
->        }
->        Box(const Box& other) {  // Copy constructor
->            name = new char[strlen(other.name) + 1];
->            strcpy(name, other.name);
->            std::cout << "Copied Box: " << name << "\n";
->        }
->        ~Box() {
->            delete[] name;
->        }
->    };
->       
->    int main() {
->        Box b1("Small");
->        Box b2 = b1;  // Calls copy constructor
->        return 0;
->    }
->    ```
->
->    
 
 ### Move Constructor (C++ 11)
 
@@ -241,8 +203,6 @@ int main() {
     return 0;
 }
 ```
-
-### Overloading Constructors:
 
 ### What is Constructor Overloading?
 
@@ -387,6 +347,10 @@ int main() {
 >
 > - **Mandatory**: For const members, references, and objects without default constructors.
 > - **Recommended**: For better performance with non-primitive types (e.g., std::string, custom classes).
+
+### Copy Constructor
+
+
 
 ## Destructors: Cleaning Up
 
