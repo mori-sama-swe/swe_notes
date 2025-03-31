@@ -350,7 +350,149 @@ int main() {
 
 ### Copy Constructor
 
+purpose: A **copy constructor** is a member function of a class that initializes a new object using another object of the same class. It’s called automatically in certain situations, like when you pass an object by value or return an object from a function. 
 
+The compiler provides a default copy constructor if you don’t define one, but it only does a **shallow copy** (more on that later). If your class manages dynamic resources (like pointers), you’ll often need to write your own to avoid issues.
+
+```cpp
+ClassName(const ClassName& obj);
+```
+
+- `ClassName` is the name of your class.
+
+- `const ClassName&` obj is a reference to the object being copied (passed as const to prevent modifying the original).
+
+> [!note]
+>
+> When is it Called?:
+>
+> **Object Initialization**: When you create a new object by initializing it with another object.
+>
+> ```cpp
+> MyClass obj1;
+> MyClass obj2 = obj1; // Copy constructor called
+> ```
+>
+> **Pass by Value**: When an object is passed to a function by value (not by reference).
+>
+> ```cpp
+> void someFunction(MyClass obj); // Copy constructor called
+> ```
+>
+> **Return by Value**: When a function returns an object by value.
+>
+> ```cpp
+> MyClass createObject() {
+>     MyClass temp;
+>     return temp; // Copy constructor called (sometimes optimized away)
+> }
+> ```
+
+Basic Copy Constructor Usage:
+
+- Here, `obj2` is a copy of `obj1`, and the copy constructor initializes obj2’s value and name with obj1’s data.
+
+```cpp
+#include <iostream>
+#include <string>
+
+class MyClass {
+private:
+    int value;
+    std::string name;
+
+public:
+    // Regular constructor
+    MyClass(int v, std::string n) : value(v), name(n) {
+        std::cout << "Regular constructor called\n";
+    }
+
+    // Copy constructor
+    MyClass(const MyClass& obj) : value(obj.value), name(obj.name) {
+        std::cout << "Copy constructor called\n";
+    }
+
+    void display() {
+        std::cout << "Value: " << value << ", Name: " << name << "\n";
+    }
+};
+
+int main() {
+    MyClass obj1(42, "Alice");    // Regular constructor
+    MyClass obj2 = obj1;          // Copy constructor
+    obj1.display();
+    obj2.display();
+    return 0;
+}
+```
+
+#### Shallow Copy vs. Deep Copy
+
+- **Shallow Copy**: The default copy constructor (provided by the compiler) copies the values of an object’s members as-is. If your class has pointers, it copies the pointer’s address, not the data it points to. This can lead to two objects sharing the same resource, causing problems (e.g., double deletion).
+
+- **Deep Copy**: If your class manages dynamic memory (e.g., via new), you need a custom copy constructor to allocate new memory and copy the data, ensuring the objects are independent.
+
+  - Here, the copy constructor allocates new memory for obj2’s data, so obj1 and obj2 don’t share the same pointer. This is a **deep copy**.
+
+  - ```cpp
+    #include <iostream>
+    #include <cstring>
+    
+    class DeepCopy {
+    private:
+        char* data;
+    
+    public:
+        // Regular constructor
+        DeepCopy(const char* str) {
+            data = new char[strlen(str) + 1];
+            strcpy(data, str);
+            std::cout << "Regular constructor called\n";
+        }
+    
+        // Copy constructor (deep copy)
+        DeepCopy(const DeepCopy& obj) {
+            data = new char[strlen(obj.data) + 1]; // Allocate new memory
+            strcpy(data, obj.data);                // Copy the data
+            std::cout << "Copy constructor called\n";
+        }
+    
+        // Destructor to free memory
+        ~DeepCopy() {
+            delete[] data;
+            std::cout << "Destructor called\n";
+        }
+    
+        void display() {
+            std::cout << "Data: " << data << "\n";
+        }
+    };
+    
+    int main() {
+        DeepCopy obj1("Hello");
+        DeepCopy obj2 = obj1; // Deep copy
+        obj1.display();
+        obj2.display();
+        return 0;
+    }
+    ```
+
+> [!Tip]
+>
+> **Real-World Analogy**
+>
+> Think of it like photocopying a document:
+>
+> - **Shallow Copy (Default)**: You copy the document’s cover page, but it still references the same stack of attached papers. If someone throws away the original papers, your copy is useless.
+> - **Deep Copy (Custom Copy Constructor)**: You duplicate the entire document, including all the attached papers, so your copy stands alone, fully functional.
+
+> [!important]
+>
+> **Key Points**
+>
+> - **Default Behavior**: If you don’t define a copy constructor, the compiler generates one that does a member-by-member shallow copy.
+> - **Custom Need**: Write your own if your class uses pointers or resources that need independent copies.
+> - **Const Reference**: Using const ClassName& ensures the original object isn’t modified and avoids unnecessary copies.
 
 ## Destructors: Cleaning Up
 
