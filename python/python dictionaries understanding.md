@@ -143,6 +143,17 @@ value = my_dict.get('cherry', 0)
 print(value)  # Output: 0
 ```
 
+6. `setdefault()` - Returns the value of a key if it exists; otherwise, inserts the key with a default value.
+
+```python
+my_dict = {'apple': 1}
+value = my_dict.setdefault('banana', 2)
+print(value)    # Output: 2
+print(my_dict)  # Output: {'apple': 1, 'banana': 2}
+```
+
+
+
 ---
 
 ## How To Use Dictionaries
@@ -248,5 +259,47 @@ for product in cart:
 >
 > **One thing to note: avoid modifying the dictionary (e.g., adding or removing keys) while looping over items(), as it can cause errors or unexpected behavior.** For safe modifications, consider collecting changes separately and applying them after the loop.
 
-## Dictionary Comprehensions
+## Nested Dictionaries
 
+> [!NOTE]
+>
+> A **nested dictionary** is a dictionary inside another dictionary. It allows you to organize complex data in a hierarchical way.
+>
+> ```python
+> students = {
+>     'student1': {
+>         'name': 'Alice',
+>         'age': 22,
+>         'grades': {'math': 90, 'english': 85}
+>     },
+>     'student2': {
+>         'name': 'Bob',
+>         'age': 24,
+>         'grades': {'math': 75, 'english': 92}
+>     }
+> }
+> 
+> # Accessing nested data
+> print(students['student1']['grades']['math'])  # Output: 90
+> ```
+
+### Accessing Nested Dictionaries
+
+```python
+print(person["address"]["city"])  # Output: Springfield
+```
+
+### Looping Through Nested Dictionaries
+
+```python
+for key, value in person.items():
+    if isinstance(value, dict):
+        for subkey, subvalue in value.items():
+            print(f"{key} -> {subkey}: {subvalue}")
+    else:
+        print(f"{key}: {value}")
+```
+
+
+
+## Dictionary Comprehensions
